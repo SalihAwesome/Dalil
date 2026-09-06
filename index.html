@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muzn — Smart Solar Rooftop Water Tank Cooler</title>
+<meta name="description" content="Muzn is a solar-powered evaporative cooling retrofit that drops rooftop water tank temperatures by 10°C to 15°C across Qatar and the GCC with zero electricity cost.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  :root{
+    --bg-deep:  oklch(0.18 0.03 230);
+    --bg-card:  oklch(0.24 0.03 230);
+    --bg:       oklch(0.985 0.002 230);
+    --bg-warm:  oklch(0.98 0.005 230);
+
+    --ink:       oklch(0.22 0.02 230);
+    --ink-soft:  oklch(0.38 0.02 230);
+    --ink-muted: oklch(0.55 0.02 230);
+    --paper:     oklch(0.965 0.005 230);
+    --paper-soft:oklch(0.82 0.012 230);
+
+    --accent-cool:  oklch(0.72 0.16 205);
+    --accent-solar: oklch(0.78 0.18 80);
+    --accent-cool-dim:  oklch(0.72 0.16 205 / 0.10);
+    --accent-solar-dim: oklch(0.78 0.18 80 / 0.08);
+
+    --line:     oklch(0.92 0.01 220 / 0.25);
+    --line-dark:oklch(0.55 0.02 230 / 0.12);
+    --max:      1200px;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Archivo', system-ui, sans-serif;
+    color:var(--ink); background:var(--bg);
+    font-size:17px; line-height:1.6;
+    overflow-x:hidden; -webkit-font-smoothing:antialiased;
+    font-kerning:normal;
+  }
+  img,svg{display:block; max-width:100%;}
+  a{color:inherit; text-decoration:none;}
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--accent-cool); outline-offset:3px; border-radius:2px;
+  }
+
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 40px;}
+
+  .js .reveal{transform:translateY(20px); opacity:0; transition:opacity .8s var(--ease-out), transform .8s var(--ease-out);}
+  .js .reveal.in{opacity:1; transform:translateY(0);}
+  .js .reveal-delay-1{transition-delay:.15s;}
+  .js .reveal-delay-2{transition-delay:.30s;}
+  .js .reveal-delay-3{transition-delay:.45s;}
+  .js section:not(.hero){transform:translateY(30px); opacity:0; transition:opacity .9s var(--ease-out), transform .9s var(--ease-out);}
+  .js section:not(.hero).sec-in{opacity:1; transform:translateY(0);}
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    background:oklch(0.18 0.03 230 / 0.92);
+    backdrop-filter:blur(12px) saturate(1.2);
+    border-bottom:1px solid var(--line-dark);
+    transition:transform .35s var(--ease-out), background .3s var(--ease-out);
+  }
+  header.nav-hidden{transform:translateY(-100%);}
+  nav{
+    max-width:var(--max); margin:0 auto; padding:18px 40px;
+    display:flex; align-items:center; justify-content:space-between;
+    color:var(--paper);
+  }
+  .brand{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:900; font-size:28px;
+    letter-spacing:0.02em; text-transform:uppercase; display:flex; align-items:baseline; gap:8px;
+    color:var(--paper);
+  }
+  .brand span{color:var(--accent-cool);}
+  .navlinks{display:flex; gap:34px; font-size:13px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600;}
+  .navlinks a{color:var(--paper-soft); transition:color .2s var(--ease-out); position:relative;}
+  .navlinks a:hover{color:var(--paper);}
+  .navlinks a::after{
+    content:''; position:absolute; bottom:-6px; left:0; width:100%; height:1px;
+    background:var(--accent-cool); transform:scaleX(0); transform-origin:left;
+    transition:transform .3s var(--ease-out);
+  }
+  .navlinks a:hover::after{transform:scaleX(1);}
+  .navcta{color:var(--accent-cool);}
+  @media (max-width:768px){
+    .navlinks a:not(.navcta){display:none;}
+    .navlinks .navcta{display:inline-flex;}
+    nav{padding:16px 24px;}
+    .wrap{padding:0 24px;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--bg-deep); color:var(--paper);
+    padding:170px 0 110px; position:relative; overflow:hidden;
+    min-height:100vh; display:flex; align-items:center;
+  }
+  .hero-grid{position:relative; z-index:1; display:grid; grid-template-columns:1.05fr 0.95fr; gap:60px; align-items:center;}
+
+  .hero-tag{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--accent-cool); margin-bottom:28px; font-weight:500;
+    opacity:0; transform:translateY(16px); animation:fadeUp .7s .15s var(--ease-out) forwards;
+  }
+  .hero-tag-shape{
+    width:28px; height:28px; position:relative; display:inline-flex; align-items:center; justify-content:center;
+  }
+  .hero-tag-shape::before{
+    content:''; position:absolute; width:100%; height:100%; border-radius:50%;
+    background:var(--accent-cool); opacity:0.3;
+    animation:shapePulse 2s ease-in-out infinite;
+  }
+  .hero-tag-shape::after{
+    content:''; position:absolute; width:10px; height:10px; border-radius:50%;
+    background:var(--accent-cool);
+    animation:shapeDot 2s ease-in-out infinite, dotGlow 2s ease-in-out infinite;
+  }
+  @keyframes shapePulse{
+    0%,100%{transform:scale(0.6); opacity:0.3;}
+    50%{transform:scale(1.2); opacity:0.1;}
+  }
+  @keyframes shapeDot{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(0.8);}
+  }
+  @keyframes dotGlow{
+    0%,100%{box-shadow:0 0 8px 2px oklch(0.72 0.16 205 / 0.6);}
+    50%{box-shadow:0 0 16px 4px oklch(0.72 0.16 205 / 0.9);}
+  }
+  @keyframes fadeUp{ to{opacity:1; transform:translateY(0);} }
+  .hero h1{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:900;
+    font-size:clamp(46px, 7.5vw, 92px); line-height:0.92; letter-spacing:-0.02em;
+    text-transform:uppercase; color:var(--paper); text-wrap:balance;
+    opacity:0; transform:translateY(28px); animation:fadeUp .8s .3s var(--ease-out) forwards;
+  }
+  .hero h1 em{font-style:normal; color:var(--accent-cool);}
+  .hero-sub{
+    font-size:18px; max-width:490px; color:var(--paper-soft);
+    margin:28px 0 36px; font-weight:400; text-wrap:pretty;
+    opacity:0; transform:translateY(20px); animation:fadeUp .7s .5s var(--ease-out) forwards;
+  }
+  .hero-actions{
+    display:flex; gap:14px; flex-wrap:wrap;
+    opacity:0; transform:translateY(20px); animation:fadeUp .7s .65s var(--ease-out) forwards;
+  }
+  .btn{
+    font-size:13px; letter-spacing:0.05em; text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:10px; padding:15px 26px; border-radius:4px;
+    transition:transform .2s var(--ease-out), background .2s var(--ease-out), color .2s var(--ease-out), box-shadow .2s var(--ease-out), border-color .2s var(--ease-out);
+    cursor:pointer; font-weight:600; border:1px solid currentColor;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-solid{background:var(--accent-cool); color:var(--bg-deep); border-color:var(--accent-cool);}
+  .btn-solid:hover{filter:brightness(1.08); box-shadow:0 10px 28px -10px oklch(0.72 0.16 205 / 0.35);}
+  .btn-ghost{color:var(--paper); border-color:oklch(0.94 0.01 220 / 0.20);}
+  .btn-ghost:hover{border-color:var(--accent-cool); color:var(--accent-cool);}
+
+  .hero-visual{
+    position:relative; opacity:0; transform:translateY(36px) scale(0.98);
+    animation:fadeUpScale .9s .45s var(--ease-out) forwards;
+  }
+  @keyframes fadeUpScale{ to{opacity:1; transform:translateY(0) scale(1);} }
+  .hero-photo-frame{
+    position:relative; z-index:1; border-radius:8px; overflow:hidden;
+    background:var(--bg-card); border:1px solid var(--line-dark);
+    transition:transform .4s var(--ease-out), box-shadow .4s var(--ease-out);
+  }
+  .hero-photo-frame:hover{
+    transform:translateY(-4px) scale(1.01);
+    box-shadow:0 20px 50px -15px oklch(0.13 0.03 230 / 0.4);
+  }
+  .hero-photo{width:100%; aspect-ratio:4/4.8; object-fit:cover; display:block;}
+
+  @media (max-width:960px){
+    .hero-grid{grid-template-columns:1fr; text-align:left;}
+    .hero{padding-top:140px; padding-bottom:80px;}
+    .hero-visual{max-width:420px; margin-top:20px;}
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:100px 0;}
+  .on-dark{background:var(--bg-deep); color:var(--paper);}
+  .on-light{background:var(--bg); color:var(--ink);}
+  .section-lead{max-width:620px;}
+  .section-lead h2{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800;
+    font-size:clamp(34px, 4.6vw, 60px); line-height:0.95; letter-spacing:-0.015em;
+    text-transform:uppercase; text-wrap:balance; margin-top:12px; color:var(--ink);
+  }
+  .section-lead p{font-size:17px; color:var(--ink-soft); margin-top:18px; max-width:540px; text-wrap:pretty;}
+  .on-dark .section-lead h2{color:var(--paper);}
+  .on-dark .section-lead p{color:var(--paper-soft);}
+
+  /* ---------- COMPARISON MATRIX ---------- */
+  .board{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;}
+  .board-copy p{font-size:17px; color:var(--ink-soft); max-width:480px; line-height:1.65; text-wrap:pretty;}
+  .board-copy p + p{margin-top:18px;}
+
+  .matrix-card{
+    background:var(--bg-warm); color:var(--ink);
+    border-radius:12px; padding:28px;
+    font-family:'JetBrains Mono', monospace; font-size:13px; line-height:1.6;
+    border:1px solid var(--line);
+    transition:transform .3s var(--ease-out), box-shadow .3s var(--ease-out);
+  }
+  .matrix-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 40px -12px oklch(0.18 0.02 230 / 0.12);
+  }
+  .matrix-header{
+    display:grid; grid-template-columns:1.2fr 1fr 1fr; padding-bottom:12px; margin-bottom:12px;
+    border-bottom:1px solid var(--line); font-weight:600; text-transform:uppercase; font-size:11px; letter-spacing:0.05em;
+    color:var(--ink-muted);
+  }
+  .matrix-row{
+    display:grid; grid-template-columns:1.2fr 1fr 1fr; align-items:center; padding:12px 0;
+    border-bottom:1px dashed var(--line); transition:background .25s var(--ease-out), padding .25s var(--ease-out);
+    cursor:default; border-radius:6px;
+    opacity:0; transform:translateX(-10px);
+  }
+  .js .matrix-card.in .matrix-row{opacity:1; transform:translateX(0); transition:opacity .5s var(--ease-out), transform .5s var(--ease-out), background .25s var(--ease-out), padding .25s var(--ease-out);}
+  .js .matrix-card.in .matrix-row:nth-child(1){transition-delay:.05s;}
+  .js .matrix-card.in .matrix-row:nth-child(2){transition-delay:.10s;}
+  .js .matrix-card.in .matrix-row:nth-child(3){transition-delay:.15s;}
+  .js .matrix-card.in .matrix-row:nth-child(4){transition-delay:.20s;}
+  .js .matrix-card.in .matrix-row:nth-child(5){transition-delay:.25s;}
+  .matrix-row:last-child{border-bottom:none;}
+  .matrix-row:hover{
+    background:oklch(0.72 0.16 205 / 0.08);
+    padding:12px;
+  }
+  .matrix-row .lbl{font-weight:500; color:var(--ink); opacity:0.9;}
+  .matrix-row .old{color:var(--ink-muted); opacity:0.85;}
+  .matrix-row .new{color:var(--accent-cool); font-weight:600;}
+  @media (max-width:960px){ .board{grid-template-columns:1fr; gap:45px;} }
+  @media (max-width:640px){
+    .matrix-row{grid-template-columns:1fr 1fr 1fr; font-size:11px; gap:8px;}
+    .matrix-header{grid-template-columns:1fr 1fr 1fr; font-size:10px;}
+  }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{display:grid; grid-template-columns:repeat(4, 1fr); gap:36px; margin-top:70px;}
+  .step{padding-top:28px; border-top:2px solid var(--line-dark); position:relative;}
+  .step::before{
+    content:''; position:absolute; top:-2px; left:0; width:60px; height:2px; background:var(--accent-cool);
+    transform:scaleX(0.25); transform-origin:left; transition:transform .6s var(--ease-out);
+  }
+  .js .step.in::before{transform:scaleX(1);}
+  .step-num{
+    font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--accent-cool); font-weight:600;
+    letter-spacing:0.05em; margin-bottom:16px; display:block; text-transform:uppercase;
+  }
+  .step h3{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:23px;
+    text-transform:none; letter-spacing:0; line-height:1.15; margin-bottom:10px; color:var(--paper);
+  }
+  .step p{font-size:15px; color:var(--paper-soft); text-wrap:pretty; max-width:260px;}
+  .step svg{margin-bottom:18px; opacity:0.9; transition:transform .3s var(--ease-out);}
+  .step:hover svg{transform:translateY(-4px) scale(1.05);}
+  @media (max-width:960px){ .steps{grid-template-columns:1fr 1fr; gap:40px 30px;} }
+  @media (max-width:560px){ .steps{grid-template-columns:1fr;} }
+
+  /* ---------- BENEFITS ---------- */
+  .benefits{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:70px;
+  }
+  .benefit{
+    background:var(--bg-warm); padding:40px 36px; border-radius:12px;
+    border:1px solid var(--line);
+    transition:transform .3s var(--ease-out), box-shadow .3s var(--ease-out), background .3s var(--ease-out), border-color .3s var(--ease-out);
+  }
+  .benefit:hover{
+    transform:translateY(-4px);
+    background:var(--bg);
+    border-color:var(--accent-cool-dim);
+    box-shadow:0 12px 40px -12px oklch(0.18 0.02 230 / 0.10);
+  }
+  .benefit .tag{
+    font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--accent-cool); margin-bottom:16px; font-weight:600;
+  }
+  .benefit h3{
+    font-family:'Big Shoulders Display', sans-serif; font-weight:800; font-size:25px;
+    text-transform:none; letter-spacing:0; margin-bottom:12px; line-height:1.1; color:var(--ink);
+  }
+  .benefit p{font-size:15px; color:var(--ink-soft); text-wrap:pretty; line-height:1.6;}
+  @media (max-width:960px){ .benefits{grid-template-columns:1fr; gap:20px;} }
+
+  /* ---------- SPECS ---------- */
+  .status{display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:start;}
+  .status p{font-size:17px; color:var(--paper-soft); max-width:520px; line-height:1.65; text-wrap:pretty;}
+  .status p + p{margin-top:18px;}
+  .spec{
+    border-radius:12px; padding:28px; background:var(--bg-card);
+    border:1px solid var(--line-dark);
+    transition:transform .3s var(--ease-out), box-shadow .3s var(--ease-out), border-color .3s var(--ease-out);
+  }
+  .spec:hover{
+    transform:translateY(-2px);
+    border-color:oklch(0.72 0.16 205 / 0.25);
+    box-shadow:0 12px 40px -12px rgba(0,0,0,0.3);
+  }
+  .spec-row{
+    display:flex; justify-content:space-between; gap:20px; padding:13px 0;
+    border-bottom:1px solid var(--line-dark); font-family:'JetBrains Mono', monospace; font-size:12.5px;
+    transition:background .25s var(--ease-out), padding .25s var(--ease-out), margin .25s var(--ease-out);
+    cursor:default; border-radius:4px;
+    opacity:0; transform:translateX(-6px);
+  }
+  .js .spec.in .spec-row{opacity:1; transform:translateX(0); transition:opacity .5s var(--ease-out), transform .5s var(--ease-out), background .25s var(--ease-out), padding .25s var(--ease-out), margin .25s var(--ease-out);}
+  .js .spec.in .spec-row:nth-child(1){transition-delay:.05s;}
+  .js .spec.in .spec-row:nth-child(2){transition-delay:.10s;}
+  .js .spec.in .spec-row:nth-child(3){transition-delay:.15s;}
+  .js .spec.in .spec-row:nth-child(4){transition-delay:.20s;}
+  .spec-row:last-child{border-bottom:none;}
+  .spec-row .k{color:var(--paper-soft);}
+  .spec-row .v{color:var(--accent-cool); font-weight:500; text-align:right; font-variant-numeric:tabular-nums;}
+  .spec-row:hover{
+    background:oklch(0.72 0.16 205 / 0.08);
+    padding:13px 10px; margin:0 -10px;
+  }
+  .spec-row:hover .v{font-weight:600;}
+  .spec-row:hover .k{color:var(--paper);}
+  @media (max-width:960px){ .status{grid-template-columns:1fr; gap:50px;} }
+  @media (max-width:640px){ .spec{font-size:12px;} }
+
+  /* ---------- CTA ---------- */
+  .cta{
+    text-align:center; position:relative; padding:100px 0;
+  }
+  .cta-sun{
+    position:absolute; right:40px; top:-40px; width:160px; height:160px; pointer-events:none; opacity:0.20;
+    color:var(--accent-solar);
+    animation:spin 20s linear infinite;
+  }
+  @keyframes spin{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+  .cta-sun svg{width:100%; height:100%;}
+  .cta h2{
+    font-family:'Big Shoulders Display', sans-serif; font-size:clamp(32px, 5vw, 56px); font-weight:900;
+    line-height:0.95; position:relative; text-transform:uppercase; letter-spacing:-0.015em; text-wrap:balance; color:var(--ink);
+  }
+  .cta p{font-size:17px; max-width:540px; margin:20px auto 32px; color:var(--ink-soft); line-height:1.65; position:relative; text-wrap:pretty;}
+  .cta-actions{position:relative; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:50px 0; background:var(--bg-deep); color:var(--paper); border-top:1px solid var(--line-dark);}
+  .foot-row{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;
+    font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:500;
+  }
+  .foot-row > div:first-child{color:var(--paper-soft);}
+  .foot-links{display:flex; gap:24px;}
+  .foot-links a{color:var(--paper-soft); transition:color .2s var(--ease-out);}
+  .foot-links a:hover{color:var(--accent-cool);}
+  @media (max-width:640px){
+    .foot-row{flex-direction:column; align-items:flex-start; gap:20px;}
+    .foot-links{gap:16px;}
+  }
+
+  /* Subtle photo float */
+  @keyframes gentleFloat{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-6px);}
+  }
+  .hero-photo-frame{animation:gentleFloat 6s ease-in-out infinite;}
+</style>
+</head>
+<body>
+
+<header id="main-header">
+  <nav>
+    <div class="brand">MUZN <span>SMART TANK COOLER</span></div>
+    <div class="navlinks">
+      <a href="#problem">The Problem</a>
+      <a href="#how">How It Works</a>
+      <a href="#specs">Specs</a>
+      <a href="#contact" class="navcta">Get Muzn</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="hero-tag"><span class="hero-tag-shape"></span> Zero Electricity Cost · GCC Climate Retrofit</div>
+      <h1>Cool water.<br>Zero hassle<em>.</em><br>Beat the boil.</h1>
+      <p class="hero-sub">Muzn screws onto your existing rooftop water tank and drops temperatures by 10°C to 15°C using solar power. No wiring, no monthly bills, no plumber.</p>
+      <div class="hero-actions">
+        <a href="#how" class="btn btn-solid">See how it works</a>
+        <a href="#specs" class="btn btn-ghost">View tech specs →</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-photo-frame">
+        <img class="hero-photo" src="https://images.pexels.com/photos/17743455/pexels-photo-17743455.jpeg?cs=srgb&dl=pexels-plasticlines-17743455.jpg&fm=jpg&w=1200&fit=crop" alt="Rooftop water tank and antennas in a residential setting, the environment Muzn is built for">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="on-light" id="problem">
+  <div class="wrap board">
+    <div class="section-lead reveal">
+      <h2>50°C water in August<br>isn't a shower.<br>It's a hazard.</h2>
+      <p>Traditional chillers cost thousands, demand professional installation, and spike your electricity bill. Muzn replaces all of that with a 5-minute hand-tight retrofit.</p>
+    </div>
+    <div class="matrix-card reveal reveal-delay-1">
+      <div class="matrix-header">
+        <span>Feature</span>
+        <span>Freon Chiller</span>
+        <span>Muzn</span>
+      </div>
+      <div class="matrix-row">
+        <span class="lbl">Hardware Cost</span>
+        <span class="old">QAR 3,500–5,000+</span>
+        <span class="new">QAR 1,300–1,500</span>
+      </div>
+      <div class="matrix-row">
+        <span class="lbl">Monthly Power</span>
+        <span class="old">+QAR 300/mo</span>
+        <span class="new">QAR 0 · 100% Solar</span>
+      </div>
+      <div class="matrix-row">
+        <span class="lbl">Installation</span>
+        <span class="old">Professional Plumber</span>
+        <span class="new">5-Min Hand-Tight DIY</span>
+      </div>
+      <div class="matrix-row highlight">
+        <span class="lbl">Peak Temp Drop</span>
+        <span class="old">15°C Drop</span>
+        <span class="new">10°C – 15°C Drop</span>
+      </div>
+      <div class="matrix-row">
+        <span class="lbl">Grid Dependency</span>
+        <span class="old">Heavy AC Load</span>
+        <span class="new">Zero Grid Draw</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="on-dark" id="how">
+  <div class="wrap">
+    <div class="section-lead reveal">
+      <h2>Four layers.<br>Pure physics.</h2>
+      <p>Muzn forces surface water to evaporate, pulling heat directly out of the tank with no refrigerants.</p>
+    </div>
+    <div class="steps reveal">
+      <div class="step">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="var(--accent-cool)" stroke-width="1.8"/><path d="M3 9h18M9 3v18" stroke="var(--accent-cool)" stroke-width="1.8"/></svg>
+        <span class="step-num">01 · Power</span>
+        <h3>25W Solar + LiFePO4</h3>
+        <p>Monocrystalline solar panel charges a heat-stable battery for round-the-clock cooling.</p>
+      </div>
+      <div class="step">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="var(--accent-cool)" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="6" r="2" fill="var(--accent-cool)"/><circle cx="16" cy="12" r="2" fill="var(--accent-cool)"/><circle cx="10" cy="18" r="2" fill="var(--accent-cool)"/></svg>
+        <span class="step-num">02 · Filter</span>
+        <h3>Dual-Stage Intake</h3>
+        <p>Washable mesh blocks Shamal sand, then a MERV-13 cartridge keeps air clean.</p>
+      </div>
+      <div class="step">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 12l7 7 7-7" stroke="var(--accent-cool)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="step-num">03 · Pressurize</span>
+        <h3>Forced Evaporation</h3>
+        <p>12V centrifugal blower pushes dry air across the water surface, stripping heat.</p>
+      </div>
+      <div class="step">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M4 15c4 0 4-6 8-6s4 6 8 6M4 9c4 0 4-6 8-6s4 6 8 6" stroke="var(--accent-cool)" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span class="step-num">04 · Exhaust</span>
+        <h3>Downward Venting</h3>
+        <p>Humid air vents downward through louvers, protecting the solar panel from moisture.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="on-light">
+  <div class="wrap">
+    <div class="section-lead reveal">
+      <h2>Built for GCC villas.<br>Engineered for renters.</h2>
+    </div>
+    <div class="benefits reveal">
+      <div class="benefit">
+        <div class="tag">Homeowners &amp; Tenants</div>
+        <h3>Zero Installation Hassle</h3>
+        <p>Unscrew the old lid, set the gasket, hand-tighten Muzn. No tools, no professionals, no drilling.</p>
+      </div>
+      <div class="benefit">
+        <div class="tag">Villa Owners</div>
+        <h3>Zero Electricity Expense</h3>
+        <p>Runs entirely on sunlight. Nothing added to your monthly utility bill. Ever.</p>
+      </div>
+      <div class="benefit">
+        <div class="tag">Extreme Climates</div>
+        <h3>Shamal Sand Defense</h3>
+        <p>Dual-stage filtration and an elevated chassis keep sand out and drinking water pure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="on-dark" id="specs">
+  <div class="wrap status">
+    <div class="reveal">
+      <div class="section-lead">
+        <h2>Smart IoT logic.<br>Desert-tested hardware.</h2>
+      </div>
+      <p>An ESP32 auto-scales fan speed and connects via Wi-Fi + LoRaWAN for reliable signal through concrete villa roofs.</p>
+    </div>
+    <div class="spec reveal reveal-delay-1">
+      <div class="spec-row"><span class="k">Temperature Drop</span><span class="v">10°C – 15°C</span></div>
+      <div class="spec-row"><span class="k">Tank Neck Diameter</span><span class="v">400 – 600 mm</span></div>
+      <div class="spec-row"><span class="k">Solar Panel</span><span class="v">25W Monocrystalline</span></div>
+      <div class="spec-row"><span class="k">Connectivity</span><span class="v">Wi-Fi + LoRaWAN</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="on-light" id="contact">
+  <div class="wrap">
+    <div class="cta reveal">
+      <div class="cta-sun">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <h2>Stop boiling your water<br>this summer.</h2>
+      <p>For villa owners, developers, and climate investors across Qatar and the GCC.</p>
+      <div class="cta-actions">
+        <a href="mailto:info@dalil.page" class="btn btn-solid">info@dalil.page</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <div>Muzn Smart Tank Cooler</div>
+    <div class="foot-links">
+      <a href="#problem">The Problem</a>
+      <a href="#how">How It Works</a>
+      <a href="#specs">Specs</a>
+      <a href="mailto:info@dalil.page">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:0.12, rootMargin:'0px 0px -40px 0px'});
+  els.forEach(el=>io.observe(el));
+
+  const stepObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); stepObserver.unobserve(e.target); }
+    });
+  }, {threshold:0.3});
+  document.querySelectorAll('.step').forEach(el=>stepObserver.observe(el));
+
+  let lastScroll = 0;
+  const header = document.getElementById('main-header');
+  window.addEventListener('scroll', ()=>{
+    const current = window.scrollY;
+    if(current > 100 && current > lastScroll){ header.classList.add('nav-hidden'); }
+    else { header.classList.remove('nav-hidden'); }
+    lastScroll = current;
+  }, {passive:true});
+
+  const secs = document.querySelectorAll('section:not(.hero)');
+  const secIo = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('sec-in'); secIo.unobserve(e.target); }
+    });
+  }, {threshold:0.08, rootMargin:'0px 0px -30px 0px'});
+  secs.forEach(el=>secIo.observe(el));
+
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      const target = document.querySelector(a.getAttribute('href'));
+      if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  });
+</script>
+
+</body>
+</html>
